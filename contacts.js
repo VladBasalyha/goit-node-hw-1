@@ -6,6 +6,7 @@ const contactsPath = path.join("db", "contacts.json");
 async function listContacts() {
 	try {
 		const data = await (await fs.readFile(contactsPath)).toString();
+		console.log(JSON.parse(data));
 		return JSON.parse(data);
 	} catch (err) {
 		console.log(err);
@@ -29,26 +30,33 @@ async function removeContact(contactId) {
 	const index = await contactsList.findIndex(
 		(contact) => contactId == contact.id
 	);
-	const deleteContact = await contactsList.splice(index, 1);
-	console.log(contactsList);
+	if (index === -1) {
+		console.log("no such contact");
+		return;
+	}
+	contactsList.splice(index, 1);
+	await fs.writeFile(contactsPath, JSON.stringify(contactsList));
 }
 
 async function addContact(name, email, phone) {
+	const newContact = {
+		id: Math.random(),
+		name,
+		email,
+		phone,
+	};
 	try {
 		const contactsList = await listContacts();
-		const newContact = {
-			id: Math.random(),
-			name,
-			email,
-			phone,
-		};
 		contactsList.push(newContact);
-		console.log(contactsList);
-		await fs.writeFile("contacts.json", JSON.stringify(newContact));
-		return console.table(newContact);
+		await fs.writeFile("db/contacts.json", JSON.stringify(contactsList));
 	} catch (err) {
 		console.log(`${err} error`);
 	}
 }
 
-addContact("Vlad", "123@ukr.net", "432431312");
+module.exports = {
+	listContacts,
+	getContactById,
+	removeContact,
+	addContact,
+};
