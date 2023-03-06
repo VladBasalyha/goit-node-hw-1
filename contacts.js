@@ -16,7 +16,7 @@ async function getContactById(contactId) {
 	try {
 		const contactsList = await listContacts();
 		const data = await contactsList.find((elem) => {
-			return contactId == elem.id ?? elem;
+			return contactId === elem.id ?? elem;
 		});
 		if (data === undefined) {
 			console.log("seems, there is no contacts by this id");
