@@ -15,22 +15,23 @@ const argv = program.opts();
 
 // TODO: рефакторить
 function invokeAction({ action, id, name, email, phone }) {
-    const {getContactById, listContacts} = contactsFunctions
+	const { getContactById, listContacts, addContact, removeContact } =
+		contactsFunctions;
 	switch (action) {
 		case "list":
 			listContacts();
 			break;
 
 		case "get":
-			getContactById(id)
+			getContactById(id);
 			break;
 
 		case "add":
-			contactsFunctions.
+			addContact(name, email, phone);
 			break;
 
 		case "remove":
-			// ... id
+			removeContact(id);
 			break;
 
 		default:
